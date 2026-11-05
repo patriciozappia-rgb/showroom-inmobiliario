@@ -1,74 +1,84 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Showroom Interactivo con Hotspots</title>
+    <!-- Importar la librería de Google Model Viewer -->
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+    <style>
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #0f172a; color: white; }
+        model-viewer { width: 100vw; height: 100vh; background-color: #1e293b; }
+        
+        /* Estilo de los botones flotantes (hotspots) */
+        .hotspot {
+            background: #38bdf8;
+            color: #0f172a;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
+            transition: transform 0.2s;
+        }
+        .hotspot:hover { transform: scale(1.3); background: #0ea5e9; }
 
-  <title>Showroom de Departamentos</title>
-
-  <script type="module"
-    src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.3.0/model-viewer.min.js">
-  </script>
-
-  <link rel="stylesheet" href="estilos.css">
+        /* Tarjeta de información emergente asociada al hotspot */
+        .annotation {
+            background: rgba(30, 41, 59, 0.95);
+            border: 1px solid #334155;
+            color: #fff;
+            padding: 12px 16px;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            max-width: 220px;
+            display: none; /* Se muestra al hacer clic o pasar el mouse */
+            font-size: 0.85rem;
+        }
+        .annotation.visible { display: block; }
+        .annotation h4 { margin: 0 0 5px 0; color: #38bdf8; font-size: 1rem; }
+        .annotation p { margin: 0 0 8px 0; color: #94a3b8; }
+        .annotation a { color: #fff; background: #0284c7; padding: 4px 8px; border-radius: 4px; text-decoration: none; display: inline-block; }
+    </style>
 </head>
-
 <body>
 
-<header>
-  <h1>VÍA BELL</h1>
-  <p>Showroom inmobiliario</p>
-</header>
+    <model-viewer src="tu-modelo.glb" alt="Showroom Inmobiliario" ar camera-controls auto-rotate shadow-intensity="1">
+        
+        <!-- Hotspot 1 -->
+        <button class="hotspot" slot="hotspot-1" data-position="2m 3m -1m" data-normal="0m 1m 0m" onclick="toggleInfo('info-1')">
+            1
+        </button>
+        <div id="info-1" class="annotation">
+            <h4>Departamento 2A</h4>
+            <p>2 Ambientes • 55 m²<br>USD 85.000</p>
+            <a href="#contacto">Ver Plano</a>
+        </div>
 
-<section class="hero">
-  <h2>Edificio residencial</h2>
-  <p>Descubrí tu próximo departamento</p>
-  <button onclick="irAEdificio()">Explorar edificio</button>
-</section>
+        <!-- Hotspot 2 (Amenities / Terraza) -->
+        <button class="hotspot" slot="hotspot-2" data-position="0m 6m 2m" data-normal="0m 0m 1m" onclick="toggleInfo('info-2')">
+            2
+        </button>
+        <div id="info-2" class="annotation">
+            <h4>Terraza & Sum</h4>
+            <p>Parrilla y espacios comunes de uso exclusivo.</p>
+        </div>
 
-<section id="edificio">
+    </model-viewer>
 
-  <h2>Edificio 3D</h2>
-
-  <model-viewer
-    id="modelo"
-    src="URL-DE-TU-EDIFICIO.glb"
-    camera-controls
-    shadow-intensity="1"
-    exposure="1"
-    alt="Edificio residencial 3D">
-  </model-viewer>
-
-</section>
-
-<section class="departamentos">
-
-  <h2>Seleccioná tu departamento</h2>
-
-  <button onclick="seleccionar('A')">Departamento A</button>
-  <button onclick="seleccionar('B')">Departamento B</button>
-  <button onclick="seleccionar('C')">Departamento C</button>
-
-  <div id="informacion">
-    Seleccioná una unidad para conocer sus características.
-  </div>
-
-</section>
-
-<section class="contacto">
-
-  <h2>Consultas comerciales</h2>
-
-  <p>Solicitá información sobre disponibilidad.</p>
-
-  <a href="https://wa.me/TU_NUMERO">
-    Consultar por WhatsApp
-  </a>
-
-</section>
-
-<script src="showroom.js"></script>
+    <script>
+        function toggleInfo(id) {
+            // Ocultar todas las demás tarjetas primero
+            document.querySelectorAll('.annotation').forEach(el => {
+                if(el.id !== id) el.classList.remove('visible');
+            });
+            // Alternar la seleccionada
+            const target = document.getElementById(id);
+            target.classList.toggle('visible');
+        }
+    </script>
 
 </body>
 </html>
